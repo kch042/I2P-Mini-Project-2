@@ -1,0 +1,5 @@
+*.o
+td
+resources
+Assets.xcassets
+Base.lproj
