@@ -3,6 +3,7 @@
 #include <allegro5/allegro_primitives.h>
 #include <cmath>
 #include <string>
+#include <iostream>
 
 #include "AudioHelper.hpp"
 #include "Collider.hpp"
@@ -20,9 +21,58 @@ BombArmy::BombArmy(float x, float y) :
     // Move center downward, since we the army head is slightly biased upward.
     Anchor.y += 8.0f / GetBitmapHeight();
 }
+
+void
+BombArmy::SetTarget() {
+    if (Target) return;
+
+    PlayScene *scene = getPlayScene();
+    Defense *tgt = 0;
+    std::string tgtType;
+
+    int minDis = INT_MAX;
+    int dis;
+
+    // find wall first
+    for (auto &it: scene->WallGroup->GetObjects()) {
+        dis = ManHattanDistance(it->Position);
+        if (dis < minDis) {
+            minDis = dis;
+            tgt = dynamic_cast<Defense*>(it);
+            tgtType = "Wall";
+        }
+    }
+
+    // find normal defense if no wall
+    if (!tgt) {
+        minDis = INT_MAX;
+        for (auto &it: scene->DefenseGroup->GetObjects()) {
+            dis = ManHattanDistance(it->Position);
+            if (dis < minDis) {
+                minDis = dis;
+                tgt = dynamic_cast<Defense*>(it);
+                tgtType = "Defense";
+            }
+        }
+    }
+
+    if (tgt) {
+            Target = tgt;
+            TargetType = tgtType;
+
+            Target->lockedArmies.push_back(this);
+            lockedArmyIterator = std::prev(Target->lockedArmies.end());
+        }
+
+    return;
+}
+
 void BombArmy::Update(float deltaTime) {
     // PlayScene
     PlayScene* scene = getPlayScene();
+    Defense *tgt = 0;
+    int minDis = INT_MAX;
+    int dis;
 
     if (isPreview) return ;
     
@@ -31,17 +81,12 @@ void BombArmy::Update(float deltaTime) {
     int y = static_cast<int>(floor(Position.y / PlayScene::BlockSize));
     
     if (!Target) {
-        // Lock closet target
-        // Can be improved by Spatial Hash, Quad Tree, ...
-        // However simply loop through all enemies is enough for this program.
-        
         // TODO 2 (6/8): Lock the closet wall. If there's no wall on the map, it will lock the closet defense.
         // For the simplicity, we use manHattan distance to measure the distance bewteen objects. You can use the ManHattanDistance() function in Army class directly for calculation.
 
-        
         // TODO 2 (7/8): Store the closet target in Target, and update lockedArmyIterator. You can imitate the same part in Defense::Update().
-        // Also, record the target is wall or a noraml defense.
-
+        // Also, record the target is wall or a noraml defense.   
+        SetTarget();
     }
     if (Target) {
         Rotation = UpdateRotation(deltaTime, Target->Position);
@@ -49,8 +94,13 @@ void BombArmy::Update(float deltaTime) {
         reload = coolDown;
         
         // TODO 2 (8/8): If bomb army is on the same block with target. Explode itself to deal damage to the target. Otherwise, move toward the target.
-        if (false /* need to modify */) {
+        if (Engine::Collider::IsCircleOverlap(Position, CollisionRadius, Target->Position, Target->CollisionRadius)) {
             // Notice that bomb army deals different damage to wall and normal target.
+            float dmg = 5.0;
+            if (TargetType == "Wall") 
+                dmg = INFINITY;
+            
+            Target->Hit(dmg);
             Hit(INFINITY);
         }
         else {
@@ -70,6 +120,13 @@ void BombArmy::Update(float deltaTime) {
 void BombArmy::CreateBullet(Engine::Point pt) {}
 
 // TODO 2 (5/8): You can imitate the hit function in Army class. Notice that the bomb army won't have explosion effect.
+// Bomb got hit by defenses, and loses some HP equal to damage.
 void BombArmy::Hit(float damage) {
-
+    HP -= damage;
+    if (HP <= 0) {
+        // Remove all Defense's reference to target.
+        for (auto& it: lockedDefenses)
+            it->Target = nullptr;
+        getPlayScene()->ArmyGroup->RemoveObject(objectIterator);
+    }
 }

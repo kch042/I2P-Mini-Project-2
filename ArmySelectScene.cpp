@@ -16,14 +16,13 @@
 void ArmySelectScene::Initialize() {
     // parameter initialization
     // TODO 2 (1/8): modify the totalArmy amount.
-    totalArmy = 1;
+    totalArmy = 2;
     
     // Space status background
     AddNewObject(new Engine::Image("play/sand.png", 1250, 0, 336, 896));
     
     // TODO 1 (1/8): Initialize the usedSpace and totalSpace.
-    usedSpace = 0;
-    totalSpace = 5;
+    totalSpace = 25;
     
     // TODO 1 (2/8): Add the usedSpace and totalSpace to the label.
     std::string spaceText = std::to_string(usedSpace) + "/" + std::to_string(totalSpace);
@@ -31,6 +30,7 @@ void ArmySelectScene::Initialize() {
 
     // initialize armyAmount
     if (!fromSetting) {
+        usedSpace = 0;
         for (int i=0; i<totalArmy; i++) {
             armyAmount[i] = 0;
         }
@@ -40,6 +40,7 @@ void ArmySelectScene::Initialize() {
     // set ArmyImage
     ArmyImage[0] = "play/warrior.png";
     // TODO 2 (2/8): Create the bomb image. You can find image in the play/ folder.
+    ArmyImage[1] = "play/bombs.png";
 
     // Add new enemy
     for (int i=0; i<totalArmy; i++) {

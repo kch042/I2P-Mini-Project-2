@@ -200,9 +200,12 @@ void PlayScene::OnMouseUp(int button, int mx, int my) {
 			preview = nullptr;
             
             // if amount > 0, keep the preview exists
+			// place army on the battlefield
             if (remainId != -1) {
                 if (remainId == 0)
                     preview = new ArcherArmy(0, 0);
+				else if (remainId == 1)
+					preview = new BombArmy(0, 0);
 
                 preview->Position = Engine::GameEngine::GetInstance().GetMousePosition();
                 preview->Tint = al_map_rgba(255, 255, 255, 200);
@@ -336,8 +339,9 @@ void PlayScene::ConstructUI() {
 	UIGroup->AddNewObject(new Engine::Image("play/sand.png", 0, 64*MapHeight, 1536, 128));
 
     // TODO 2 (3/8) : Construct the select button for bomb army.
-    ConstructButton(0, ArmyImage[0]);
-
+	for (int i = 0; i < totalArmy; i++) {
+		ConstructButton(i, ArmyImage[i]);
+	}
 }
 void PlayScene::ConstructButton(int id, std::string imageName) {
     ArmyButton* btn;
@@ -361,6 +365,8 @@ void PlayScene::UIBtnClicked(int id) {
     
 	if (id == 0)
         preview = new ArcherArmy(0, 0);
+	else if (id == 1)
+		preview = new BombArmy(0, 0);
 
 	if (!preview)
 		return;
