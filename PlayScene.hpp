@@ -47,7 +47,10 @@ public:
 	static const int MapWidth, MapHeight;
 	static const int BlockSize;
 	static const float DangerTime;
+
+	// cheat keyboard sequences to destroy all walls
 	static const std::vector<int> code;
+
 	int MapId;
     Engine::Point corners[WALL_SIZE];
     std::vector<Engine::Point> brokenWall[WALL_SIZE];
@@ -68,6 +71,8 @@ public:
 	Engine::Image* imgTarget;
     Army* preview;
 	std::vector<std::vector<TileType>> mapState;
+
+	// accumulate the keystrokes by users (to summon the plane to destroy the walls)
     std::list<int> keyStrokes;
 	
     static Engine::Point GetClientSize();

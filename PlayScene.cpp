@@ -49,8 +49,10 @@ const std::vector<Engine::Point> PlayScene::directions = { Engine::Point(-1, 0),
 const int PlayScene::MapWidth = 24, PlayScene::MapHeight = 12;//50;//13;
 const int PlayScene::BlockSize = 64;
 const float PlayScene::DangerTime = 7.61;
+
 // TODO 4 (2/3): Set the code sequence correctly.
-const std::vector<int> PlayScene::code = { ALLEGRO_KEY_UP };
+const std::vector<int> PlayScene::code = {ALLEGRO_KEY_UP, ALLEGRO_KEY_UP, ALLEGRO_KEY_DOWN, ALLEGRO_KEY_DOWN, ALLEGRO_KEY_LEFT, ALLEGRO_KEY_RIGHT, ALLEGRO_KEY_ENTER };
+
 Engine::Point PlayScene::GetClientSize() {
 	return Engine::Point(MapWidth * BlockSize, MapHeight * BlockSize);
 }
@@ -228,13 +230,27 @@ void PlayScene::OnKeyDown(int keyCode) {
 	IScene::OnKeyDown(keyCode);
 	if (keyCode == ALLEGRO_KEY_TAB) {
         // TODO 4 (1/3): Set Tab as a code to active / de-active the debug mode.
+		DebugMode = true;
 	}
 	else {
 		keyStrokes.push_back(keyCode);
 		if (keyStrokes.size() > code.size())
 			keyStrokes.pop_front();
+
         // TODO 4 (3/3): Check whether the input sequence corresponds to the code.
         // Active a plane : EffectGroup->AddNewObject(new Plane());
+		if (keyStrokes.size() == code.size()) {
+			int i = 0;
+			for (auto it = keyStrokes.begin(); it != keyStrokes.end(); it++) {
+				if (*it != code[i]) break;
+				i++;
+			}
+
+			if (i == code.size()) {
+				EffectGroup->AddNewObject(new Plane());
+				keyStrokes.clear();
+			}
+		}
 	}
 	if (keyCode == ALLEGRO_KEY_Q) {
 		// Hotkey for ArcherArmy.
