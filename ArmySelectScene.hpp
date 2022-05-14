@@ -28,9 +28,13 @@ public:
     Engine::Label *UISpaceUsage;
     int armyAmount[6];
     int usedSpace, totalSpace;
+
+    // #(types of army)
     int totalArmy;
+
     bool mute = false;
     bool fromSetting = false;
+    bool armyChanged = false;
 };
 
 #endif /* ArmySelectScene_hpp */
