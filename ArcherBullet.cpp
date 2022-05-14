@@ -2,7 +2,8 @@
 #include <random>
 #include <string>
 
-#include "DirtyEffect.hpp"
+// #include "DirtyEffect.hpp"
+#include "ShootEffect.hpp"
 #include "ArcherBullet.hpp"
 #include "Group.hpp"
 #include "PlayScene.hpp"
@@ -18,5 +19,6 @@ ArcherBullet::ArcherBullet(Engine::Point position, Engine::Point forwardDirectio
 
 void ArcherBullet::OnExplode(Defense *defense) {
     // TODO 3 (1/2): Add a ShootEffect here. Remember you need to include the class.
- 
+    // getPlayScene()->EffectGroup->AddNewObject(new ShootEffect(defense->Position.x , defense->Position.y));
+    getPlayScene()->EffectGroup->AddNewObject(new ShootEffect(defense->Position.x, defense->Position.y));
 }

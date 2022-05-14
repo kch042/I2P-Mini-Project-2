@@ -69,6 +69,7 @@ public:
     Army* preview;
 	std::vector<std::vector<TileType>> mapState;
     std::list<int> keyStrokes;
+	
     static Engine::Point GetClientSize();
 	explicit PlayScene() = default;
 	void Initialize() override;
