@@ -107,7 +107,7 @@ void BombArmy::Update(float deltaTime) {
             int dx = Target->Position.x - Position.x;
             int dy = Target->Position.y - Position.y;
             double len = sqrt(pow(dx, 2) + pow(dy, 2));
-            Velocity = speed * Engine::Point(dx / len, dy / len);
+            Velocity = speed * Engine::Point(dx / len, dy / len) * slowFactor;
         }
         
     }

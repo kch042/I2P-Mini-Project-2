@@ -30,6 +30,7 @@ private:
         TILE_WALL,
         TILE_CANNON,
 		TILE_OCCUPIED,
+		TILE_FAST_CANNON,  // Spec1: add a new defense
 	};
 	ALLEGRO_SAMPLE_ID bgmId;
 	std::shared_ptr<ALLEGRO_SAMPLE_INSTANCE> deathBGMInstance;

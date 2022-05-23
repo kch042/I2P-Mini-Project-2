@@ -32,6 +32,9 @@ public:
     int dir = -1;
     std::list<Defense*> lockedDefenses;
     int region;
+
+    // spec 1: defense that slows down the army
+    float slowFactor = 1;
     
     Army(std::string img, float x, float y, float radius, float coolDown, float speed, float hp, int id, float shootRadius);
     // Reference: Design Patterns - Factory Method.

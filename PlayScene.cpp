@@ -30,10 +30,12 @@
 // Army
 #include "BombArmy.hpp"
 #include "ArcherArmy.hpp"
+#include "TankArmy.hpp"
 
 // Defense
 #include "CannonDefense.hpp"
 #include "WallDefense.hpp"
+#include "FastCannonDefense.hpp"
 
 #define LEFT 0
 #define RIGHT 1
@@ -219,6 +221,8 @@ void PlayScene::OnMouseUp(int button, int mx, int my) {
                     preview = new ArcherArmy(0, 0);
 				else if (remainId == 1)
 					preview = new BombArmy(0, 0);
+				else if (remainId == 2)
+					preview = new TankArmy(0, 0);
 
                 preview->Position = Engine::GameEngine::GetInstance().GetMousePosition();
                 preview->Tint = al_map_rgba(255, 255, 255, 200);
@@ -321,6 +325,7 @@ void PlayScene::ReadMap() {
 		case '0': mapData.push_back(TILE_FLOOR); break;
 		case '1': mapData.push_back(TILE_WALL); break;
         case '2': mapData.push_back(TILE_CANNON); break;
+		case '3': mapData.push_back(TILE_FAST_CANNON); break;
 		case '\n':
 		case '\r':
 			if (static_cast<int>(mapData.size()) / MapWidth != 0)
@@ -349,7 +354,10 @@ void PlayScene::ReadMap() {
                         }
                     }
                     break;
-                case TILE_CANNON:
+				case TILE_FAST_CANNON:
+					DefenseGroup->AddNewObject(new FastCannonDefense(j * BlockSize + BlockSize / 2, i * BlockSize + BlockSize / 2));
+					break;
+				case TILE_CANNON:
                     DefenseGroup->AddNewObject(new CannonDefense(j * BlockSize + BlockSize / 2, i * BlockSize + BlockSize / 2));
                     break;
                 case TILE_FLOOR:
@@ -404,6 +412,8 @@ void PlayScene::UIBtnClicked(int id) {
         preview = new ArcherArmy(0, 0);
 	else if (id == 1)
 		preview = new BombArmy(0, 0);
+	else if (id == 2)
+		preview = new TankArmy(0, 0);
 
 	if (!preview)
 		return;

@@ -85,7 +85,7 @@ void Army::Update(float deltaTime) {
         if (Target) {
             Rotation = UpdateRotation(deltaTime, Target->Position);
             // Shoot reload.
-            reload -= deltaTime;
+            reload -= deltaTime * slowFactor;
             if (reload <= 0) {
                 // shoot.
                 reload = coolDown;
@@ -210,7 +210,7 @@ void Army::Update(float deltaTime) {
                 Rotation = UpdateRotation(deltaTime, Target->Position);
                 
                 // Shoot reload.
-                reload -= deltaTime;
+                reload -= deltaTime * slowFactor;
                 if (reload <= 0) {
                     // shoot.
                     reload = coolDown;
@@ -284,7 +284,7 @@ void Army::Update(float deltaTime) {
             }
         }
     }
-    Velocity = Velocity * speed;
+    Velocity = Velocity * speed * slowFactor;
     Position.x += Velocity.x * deltaTime;
     Position.y += Velocity.y * deltaTime;
 }
