@@ -92,6 +92,22 @@ void PlayScene::Initialize() {
         bgmInstance = AudioHelper::PlaySample("play.ogg", true, 0.0);
 }
 void PlayScene::Terminate() {
+	// TODO 5: Should not delete here, since these groups will be deleted by game engine.
+
+	// delete TileMapGroup;
+    // delete GroundEffectGroup;
+    // delete DebugIndicatorGroup;
+    // delete BulletGroup;
+    // delete DefenseGroup;
+    // delete WallGroup;
+    // delete ArmyGroup;
+    // delete EffectGroup;
+    // delete UIGroup;
+
+	// Fix the bug that archer could cross the wall after first win
+	for (int i = 0; i < 4; i++)
+		brokenWall[i].clear();
+
     AudioHelper::StopSample(bgmInstance);
     bgmInstance = std::shared_ptr<ALLEGRO_SAMPLE_INSTANCE>();
 	AudioHelper::StopSample(deathBGMInstance);
@@ -125,15 +141,10 @@ void PlayScene::Update(float deltaTime) {
     if (!ArmyGroup->GetObjects().empty()) armyEmpty = false;
     if (armyEmpty) {
         // Release the resources
-        delete TileMapGroup;
-        delete GroundEffectGroup;
-        delete DebugIndicatorGroup;
-        delete BulletGroup;
-        delete DefenseGroup;
-        delete WallGroup;
-        delete ArmyGroup;
-        delete EffectGroup;
-        delete UIGroup;
+
+		// old places where resources are freed
+		// which cause crashing. (since afterward, group::Draw() will use the deletd objects)
+
         Engine::GameEngine::GetInstance().ChangeScene("lose");
     }
     
@@ -228,6 +239,16 @@ void PlayScene::OnMouseUp(int button, int mx, int my) {
 }
 void PlayScene::OnKeyDown(int keyCode) {
 	IScene::OnKeyDown(keyCode);
+
+	// DEBUG 
+	// Jumps to lose scene without causing segFault
+	if (keyCode == ALLEGRO_KEY_0) {
+		Engine::GameEngine::GetInstance().ChangeScene("lose");
+	}
+	if (keyCode == ALLEGRO_KEY_1) {
+		Engine::GameEngine::GetInstance().ChangeScene("win");
+	}
+
 	if (keyCode == ALLEGRO_KEY_TAB) {
         // TODO 4 (1/3): Set Tab as a code to active / de-active the debug mode.
 		DebugMode = true;

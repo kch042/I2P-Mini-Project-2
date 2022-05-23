@@ -1,5 +1,5 @@
 CXX = g++
-CXXFLAGS = -std=c++11 `pkg-config --cflags allegro-5`
+CXXFLAGS = -std=c++11 -g `pkg-config --cflags allegro-5`
 
 LDFLAGS = -lm -Wall -Wextra
 LDLIBS = -L/usr/local/lib \
