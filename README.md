@@ -18,4 +18,4 @@
 - Spec 4: Add a new trap
 - Spec 5: Extra Function
 
-Note: The resource folder (including images, audio, etc.) is not uploaded
+Note: The resource folder (including images, audio, etc.) is not uploaded.
