@@ -22,6 +22,7 @@ protected:
 public:
     int id;
     bool Enabled = true;
+    bool Frozen = false;
     bool Preview = false;
     Army* Target = nullptr;
     std::list<Army*> lockedArmies;

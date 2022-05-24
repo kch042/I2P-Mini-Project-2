@@ -31,6 +31,7 @@ public:
 
     // #(types of army)
     int totalArmy;
+    int totalSpell;
 
     bool mute = false;
     bool fromSetting = false;

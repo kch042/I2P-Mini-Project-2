@@ -21,6 +21,10 @@ protected:
     float rotateRadian = 2 * ALLEGRO_PI;
     float shootRadius;
     std::list<Army*>::iterator lockedArmyIterator;
+
+    // spell existing time.
+    float timeSpan;
+    bool casted = false;
 public:
     int id;
     bool isPreview = true;
@@ -35,6 +39,7 @@ public:
 
     // spec 1: defense that slows down the army
     float slowFactor = 1;
+    bool isSpell = false;
     
     Army(std::string img, float x, float y, float radius, float coolDown, float speed, float hp, int id, float shootRadius);
     // Reference: Design Patterns - Factory Method.

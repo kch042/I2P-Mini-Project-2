@@ -17,6 +17,7 @@ void ArmySelectScene::Initialize() {
     // parameter initialization
     // TODO 2 (1/8): modify the totalArmy amount.
     totalArmy = 3;
+    totalSpell = 1;
     
     // Space status background
     AddNewObject(new Engine::Image("play/sand.png", 1250, 0, 336, 896));
@@ -43,8 +44,16 @@ void ArmySelectScene::Initialize() {
     ArmyImage[1] = "play/bombs.png";
     ArmyImage[2] = "play/enemy-2.png";
 
+    // set up for spells 
+    // at now, only ice spells
+    // use totalArmy as starting idx.
+    // (not user-costomized for now)
+    PlayScene *scene = dynamic_cast<PlayScene*>(Engine::GameEngine::GetInstance().GetScene("play"));
+    scene->ArmyImage[totalArmy] = "play/ice-cubes.png";
+    scene->SetArmyAmount(totalArmy, 2);
+    scene->SetTotalSpellAmount(1);
 
-    // Add new enemy
+    // Add new enemy (set up selection blocks)
     for (int i=0; i<totalArmy; i++) {
         AddNewArmy(i, ArmyImage[i], 1);
     }

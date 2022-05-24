@@ -9,6 +9,7 @@
 #include <string>
 #include <memory>
 #include <numeric> 
+#include <iostream>
 
 // Fundamental
 #include "AudioHelper.hpp"
@@ -31,6 +32,7 @@
 #include "BombArmy.hpp"
 #include "ArcherArmy.hpp"
 #include "TankArmy.hpp"
+#include "IceSpellArmy.hpp"
 
 // Defense
 #include "CannonDefense.hpp"
@@ -94,17 +96,7 @@ void PlayScene::Initialize() {
         bgmInstance = AudioHelper::PlaySample("play.ogg", true, 0.0);
 }
 void PlayScene::Terminate() {
-	// TODO 5: Should not delete here, since these groups will be deleted by game engine.
-
-	// delete TileMapGroup;
-    // delete GroundEffectGroup;
-    // delete DebugIndicatorGroup;
-    // delete BulletGroup;
-    // delete DefenseGroup;
-    // delete WallGroup;
-    // delete ArmyGroup;
-    // delete EffectGroup;
-    // delete UIGroup;
+	// TODO 5: Should not delete here, since groups will be deleted by game engine.
 
 	// Fix the bug that archer could cross the wall after first win
 	for (int i = 0; i < 4; i++)
@@ -191,7 +183,7 @@ void PlayScene::OnMouseUp(int button, int mx, int my) {
 	if(x < 0 || x >= MapWidth || y < 0 || y >= MapHeight)
 	    return;
 	if (button & 1) {
-		if (!CheckOccupied(x, y)) {
+		if ((preview && preview->isSpell) || !CheckOccupied(x, y)) {
 			if (!preview)
 				return;
 
@@ -223,6 +215,8 @@ void PlayScene::OnMouseUp(int button, int mx, int my) {
 					preview = new BombArmy(0, 0);
 				else if (remainId == 2)
 					preview = new TankArmy(0, 0);
+				else if (remainId == totalArmy+0)
+					preview = new IceSpellArmy(0, 0);
 
                 preview->Position = Engine::GameEngine::GetInstance().GetMousePosition();
                 preview->Tint = al_map_rgba(255, 255, 255, 200);
@@ -384,7 +378,7 @@ void PlayScene::ConstructUI() {
 	UIGroup->AddNewObject(new Engine::Image("play/sand.png", 0, 64*MapHeight, 1536, 128));
 
     // TODO 2 (3/8) : Construct the select button for bomb army.
-	for (int i = 0; i < totalArmy; i++) {
+	for (int i = 0; i < totalArmy+totalSpell; i++) {
 		ConstructButton(i, ArmyImage[i]);
 	}
 }
@@ -401,6 +395,7 @@ void PlayScene::ConstructButton(int id, std::string imageName) {
     AddNewObject(UIArmyAmount[id] = new Engine::Label("x" + std::to_string(armyAmount[id]), "pirulen.ttf", 20.5, 230 + 120 * id, BlockSize * MapHeight + 110, 0, 0, 0, 255, 0.5, 0.5));
 }
 
+// when we select an army or a spell from the bottom row
 void PlayScene::UIBtnClicked(int id) {
     // might have chosen an army already, hence we need to delete first
 	if (preview) {
@@ -414,6 +409,8 @@ void PlayScene::UIBtnClicked(int id) {
 		preview = new BombArmy(0, 0);
 	else if (id == 2)
 		preview = new TankArmy(0, 0);
+	else if (id == totalArmy)
+		preview = new IceSpellArmy(0, 0);
 
 	if (!preview)
 		return;
@@ -456,6 +453,10 @@ int PlayScene::GetTotalArmyAmount() {
 
 void PlayScene::SetTotalArmyAmount(int total) {
     totalArmy = total;
+}
+
+void PlayScene::SetTotalSpellAmount(int total) {
+	totalSpell = total;
 }
 
 void PlayScene::ClearMapState(int x, int y) {

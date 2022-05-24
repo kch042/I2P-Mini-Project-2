@@ -22,7 +22,7 @@ OUT = td
 OBJS = Allegro5Exception.o AudioHelper.o Bullet.o Collider.o DirtyEffect.o ExplosionEffect.o GameEngine.o Group.o IControl.o Image.o ImageButton.o IObject.o IScene.o Label.o LOG.o LoseScene.o Plane.o PlayScene.o Point.o Resources.o Slider.o  Sprite.o StageSelectScene.o  WinScene.o main.o\
 Army.o ArcherArmy.o ArcherBullet.o ArmyBullet.o ArmyButton.o ArmySelectScene.o CannonBullet.o CannonDefense.o Defense.o\
 Role.o Setting_Scene.o Start_Scene.o WallDefense.o BombArmy.o ShootEffect.o FastCannonDefense.o FastCannonBullet.o\
-TankArmy.o
+TankArmy.o IceSpellArmy.o
 
 .PHONY: all clean
 

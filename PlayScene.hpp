@@ -41,6 +41,14 @@ protected:
     int armyAmount[MAX_ARMY_AMOUNT];
     // Total enemies;
     int totalArmy;
+
+	// Total spells
+	// Note that normal army and spell are of Army class
+	// and they are managed together in playscene
+	// For now, the only purpose of totalSpell is for
+	// "indexing" the spell.
+	// spell id: totalArmy+0, totalArmy+1, ..., totalArmy+totalSpell-1
+	int totalSpell;
 public:
     bool mute;
 	static bool DebugMode;
@@ -94,6 +102,7 @@ public:
     // get & set totalEnemy amount
     int GetTotalArmyAmount();
     void SetTotalArmyAmount(int total);
+	void SetTotalSpellAmount(int total);
 	void ReadMap();
 	void ConstructUI();
     void ConstructButton(int id, std::string imageName);

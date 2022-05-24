@@ -38,6 +38,24 @@ void Defense::Update(float deltaTime) {
     if (!Enabled)
         return;
 
+    // detect if any ice Spell is near
+    if (Frozen) {
+        int bx = static_cast<int>(floor(Position.x));
+        int by = static_cast<int>(floor(Position.y));
+
+        for (auto &it: scene->ArmyGroup->GetObjects()) {
+            int mx = static_cast<int>(floor(it->Position.x));
+            int my = static_cast<int>(floor(it->Position.y));
+        
+            Army *ay = dynamic_cast<Army*>(it);
+            if ((ay->id == 3) && (abs(mx-bx) <= 1*PlayScene::BlockSize) && (abs(my-by) <= 1*PlayScene::BlockSize)) {  // freeze spell id = 3
+                return;
+            }
+        }
+
+        Frozen = false;
+    }
+
     if (!Target) {
         // Lock first seen target.
         // Can be improved by Spatial Hash, Quad Tree, ...
@@ -45,7 +63,7 @@ void Defense::Update(float deltaTime) {
         int ey;
         for (auto& it : scene->ArmyGroup->GetObjects()) {
             ey = static_cast<int>(floor(it->Position.y / PlayScene::BlockSize));
-            if (InShootingRange(it->Position)) {
+            if (InShootingRange(it->Position) && !(dynamic_cast<Army*>(it)->isSpell)) {
                 Target = dynamic_cast<Army*>(it);
                 Target->lockedDefenses.push_back(this);
                 lockedDefenseIterator = std::prev(Target->lockedDefenses.end());
